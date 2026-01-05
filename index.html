@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF- mèo8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Talks Today</title>
+    <style>body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 1.5rem 0;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+main {
+    width: 90%;
+    max-width: 900px;
+    margin: auto;
+}
+
+.search-container {
+    margin-bottom: 2rem;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.schedule-container .time-slot {
+    background: #fff;
+    border-left: 5px solid #333;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.schedule-container .break {
+    border-left-color: #f0ad4e;
+}
+
+.schedule-container .transition {
+    background: none;
+    box-shadow: none;
+    border-left: none;
+    text-align: center;
+    padding: 0.5rem;
+    font-style: italic;
+    color: #777;
+}
+
+.time-slot h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.time-slot .time {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.time-slot .speakers {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.categories {
+    margin-top: 1rem;
+}
+
+.category {
+    display: inline-block;
+    background: #333;
+    color: #fff;
+    padding: 0.3rem 0.7rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 3rem;
+    color: #777;
+}
+</style>
+</head>
+<body>
+    <header>
+        <h1>Tech Talks Today</h1>
+        <p>A one-day event for developers, designers, and innovators.</p>
+    </header>
+    <main>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search by category (e.g., 'JavaScript', 'Backend')...">
+        </div>
+        <div id="schedule" class="schedule-container">
+            <!-- Schedule will be dynamically generated here -->
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 Tech Talks Today</p>
+    </footer>
+    <script>
+                window.talkData = [
+  {
+    "title": "The Future of JavaScript Frameworks",
+    "speakers": ["Alice Johnson"],
+    "categories": ["JavaScript", "Web Development", "Frontend"],
+    "duration": 60,
+    "description": "A deep dive into the evolving landscape of JavaScript frameworks, exploring new trends and what to expect in the coming years."
+  },
+  {
+    "title": "Advanced Node.js Performance Tuning",
+    "speakers": ["Bob Williams", "Charlie Brown"],
+    "categories": ["Node.js", "Backend", "Performance"],
+    "duration": 60,
+    "description": "Learn how to identify and fix performance bottlenecks in your Node.js applications. We'll cover profiling, memory management, and more."
+  },
+  {
+    "title": "Demystifying CSS Grid and Flexbox",
+    "speakers": ["Diana Prince"],
+    "categories": ["CSS", "Frontend", "Web Design"],
+    "duration": 60,
+    "description": "A practical guide to mastering modern CSS layouts with Grid and Flexbox. Say goodbye to float-based hacks forever."
+  },
+  {
+    "title": "Building Scalable APIs with GraphQL",
+    "speakers": ["Eve Adams"],
+    "categories": ["API", "GraphQL", "Backend"],
+    "duration": 60,
+    "description": "Discover how GraphQL can help you build more efficient and flexible APIs compared to traditional REST."
+  },
+  {
+    "title": "Web Security Essentials",
+    "speakers": ["Frank Miller", "Grace Lee"],
+    "categories": ["Security", "Web Development"],
+    "duration": 60,
+    "description": "An overview of common web vulnerabilities (XSS, CSRF, etc.) and how to protect your applications from them."
+  },
+  {
+    "title": "Introduction to WebAssembly",
+    "speakers": ["Heidi Clark"],
+    "categories": ["WebAssembly", "Performance", "Frontend"],
+    "duration": 60,
+    "description": "Explore how WebAssembly is changing the web, allowing near-native performance for intensive applications in the browser."
+  }
+]
+;
+            </script>
+            <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const scheduleContainer = document.getElementById('schedule');
+    const searchInput = document.getElementById('searchInput');
+
+    // This is a placeholder. The build script will replace it with actual data.
+    const talks = window.talkData || [];
+
+    const generateSchedule = (filterText = '') => {
+        scheduleContainer.innerHTML = '';
+        let currentTime = new Date();
+        currentTime.setHours(10, 0, 0, 0); // Event starts at 10:00 AM
+
+        const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        const filteredTalks = talks.filter(talk => {
+            if (!filterText) return true;
+            const searchTerm = filterText.toLowerCase();
+            return talk.categories.some(cat => cat.toLowerCase().includes(searchTerm));
+        });
+
+        if (filteredTalks.length === 0 && filterText) {
+            const noResults = document.createElement('div');
+            noResults.classList.add('time-slot');
+            noResults.textContent = 'No talks match your search criteria.';
+            scheduleContainer.appendChild(noResults);
+            return;
+        }
+
+        const renderTalk = (talk) => {
+            const startTime = new Date(currentTime);
+            const endTime = new Date(currentTime.getTime() + talk.duration * 60000);
+
+            const talkDiv = document.createElement('div');
+            talkDiv.classList.add('time-slot');
+            talkDiv.innerHTML = `
+                <div class="time">${formatTime(startTime)} - ${formatTime(endTime)}</div>
+                <h2>${talk.title}</h2>
+                <div class="speakers">By: ${talk.speakers.join(', ')}</div>
+                <p>${talk.description}</p>
+                <div class="categories">
+                    ${talk.categories.map(cat => `<span class="category">${cat}</span>`).join('')}
+                </div>
+            `;
+            scheduleContainer.appendChild(talkDiv);
+
+            currentTime = endTime;
+        };
+
+        const renderBreak = (duration, name) => {
+             const startTime = new Date(currentTime);
+             const endTime = new Date(currentTime.getTime() + duration * 60000);
+
+             const breakDiv = document.createElement('div');
+             breakDiv.classList.add('time-slot', 'break');
+             breakDiv.innerHTML = `
+                <div class="time">${formatTime(startTime)} - ${formatTime(endTime)}</div>
+                <h2>${name}</h2>
+             `;
+             scheduleContainer.appendChild(breakDiv);
+             currentTime = endTime;
+        };
+        
+        const renderTransition = () => {
+            const startTime = new Date(currentTime);
+            const endTime = new Date(currentTime.getTime() + 10 * 60000);
+
+            const transitionDiv = document.createElement('div');
+            transitionDiv.classList.add('transition');
+            transitionDiv.innerHTML = `
+                <div class="time">(${formatTime(startTime)} - ${formatTime(endTime)}) -- Transition --</div>
+            `;
+            scheduleContainer.appendChild(transitionDiv);
+
+            currentTime = endTime;
+        }
+
+        // Hardcoded schedule generation
+        if (filteredTalks.includes(talks[0])) renderTalk(talks[0]);
+        if (filteredTalks.includes(talks[0]) && filteredTalks.includes(talks[1])) renderTransition();
+        if (filteredTalks.includes(talks[1])) renderTalk(talks[1]);
+        if (filteredTalks.includes(talks[1]) && filteredTalks.includes(talks[2])) renderTransition();
+        if (filteredTalks.includes(talks[2])) renderTalk(talks[2]);
+        
+        if (!filterText) { // Only show lunch break if not filtering
+            renderBreak(60, 'Lunch Break');
+        }
+
+        if (filteredTalks.includes(talks[3])) renderTalk(talks[3]);
+        if (filteredTalks.includes(talks[3]) && filteredTalks.includes(talks[4])) renderTransition();
+        if (filteredTalks.includes(talks[4])) renderTalk(talks[4]);
+        if (filteredTalks.includes(talks[4]) && filteredTalks.includes(talks[5])) renderTransition();
+        if (filteredTalks.includes(talks[5])) renderTalk(talks[5]);
+
+    };
+
+    searchInput.addEventListener('input', (e) => {
+        generateSchedule(e.target.value);
+    });
+
+    // Initial render
+    generateSchedule();
+});
+</script>
+</body>
+</html>
